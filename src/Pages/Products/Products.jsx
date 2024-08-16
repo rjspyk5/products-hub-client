@@ -22,8 +22,8 @@ export const Products = () => {
                   className="select select-bordered  h-9 focus:outline-none rounded-xl min-h-6 "
                 >
                   <option>Default</option>
-                  <option value="">Newest</option>
-                  <option value="">Oldest</option>
+                  <option value="">Newest to oldest</option>
+                  <option value="">Oldest to newest</option>
                   <option value="">Low to High</option>
                   <option value="">High to Low</option>
                 </select>
