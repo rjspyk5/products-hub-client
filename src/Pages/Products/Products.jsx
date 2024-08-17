@@ -49,7 +49,7 @@ export const Products = () => {
     const fetchData = async () => {
       setloading(true);
       const resultt = await fetch(
-        `http://localhost:5000/products?page=${currentPage}&size=${size}&categories=${catagoriesFilter.join(
+        `https://products-hub-server-navy.vercel.app/products?page=${currentPage}&size=${size}&categories=${catagoriesFilter.join(
           ","
         )}&brand=${brandFilter.join(
           ","
@@ -72,7 +72,9 @@ export const Products = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: [date],
     queryFn: async () => {
-      const result = await fetch("http://localhost:5000/catagoriesandbrand");
+      const result = await fetch(
+        "https://products-hub-server-navy.vercel.app/catagoriesandbrand"
+      );
       const [resultt] = await result.json();
       return resultt;
     },
