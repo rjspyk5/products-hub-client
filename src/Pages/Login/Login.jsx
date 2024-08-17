@@ -1,22 +1,28 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../Provider/AuthProvider";
 
 export const Login = () => {
+  const { user, signIn } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const onSubmit = (data) => console.log(data);
+  const onSubmit = (data) => {
+    signIn(data.email, data.pass)
+      .then((res) => navigate("/"))
+      .catch((er) => console.log(er));
+  };
   return (
     <div>
       <section className="">
         <div className="  bg-cover bg-no-repeat container flex flex-col items-center justify-center min-h-screen px-6 mx-auto">
-          <div className="absolute  h-full w-full overflow-hidden bg-fixed bg-black bg-opacity-50"></div>
           <div className="w-full m-5 max-w-md bg-[#b6b5b52f] rounded-lg backdrop-blur-lg px-8 py-5">
             <form onSubmit={handleSubmit(onSubmit)} className="">
-              <h1 className="mt-3 text-2xl text-white font-semibold text-center capitalize sm:text-3xl">
+              <h1 className="mt-3 text-2xl  font-semibold text-center capitalize sm:text-3xl">
                 sign In
               </h1>
               <div className="relative flex items-center mt-8">
@@ -87,7 +93,7 @@ export const Login = () => {
                 </button>
               </div>
             </form>{" "}
-            <p className="mt-4 text-center text-white">or sign in with</p>
+            <p className="mt-4 text-center ">or sign in with</p>
             <button className="flex items-center w-full justify-center px-6 py-3 mt-4 text-white transition-colors duration-300 transform border rounded-lg hover:text-black hover:bg-gray-50 dark:hover:bg-gray-600">
               <svg className="w-6 h-6 mx-2" viewBox="0 0 40 40">
                 <path
@@ -108,7 +114,7 @@ export const Login = () => {
                 />
               </svg>
 
-              <span className="mx-2">SignIn with Google</span>
+              <span className="mx-2 text-black">SignIn with Google</span>
             </button>
             <div className="mt-6 text-center ">
               <Link to="/reg" className="text-sm text-blue-500 hover:underline">

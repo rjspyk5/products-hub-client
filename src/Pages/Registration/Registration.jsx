@@ -4,14 +4,16 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 export const Registration = () => {
-  const { user, goggleLogin } = useContext(AuthContext);
+  const { user, goggleLogin, signUp } = useContext(AuthContext);
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
   const onSubmit = (data) => {
-    console.log(data);
+    signUp(data.email, data.pass)
+      .then((res) => console.log(res))
+      .catch((er) => console.log(er));
 
     //   createUser(data.email, data.pass)
 
@@ -36,10 +38,9 @@ export const Registration = () => {
     <div>
       <section className="">
         <div className=" relative bg-cover bg-no-repeat container flex flex-col items-center justify-center min-h-screen px-6 mx-auto">
-          <div className="absolute p-0 m-0 h-full w-full overflow-hidden bg-fixed bg-black bg-opacity-50"></div>
           <div className="w-full m-5 max-w-md bg-[#b6b5b52f] rounded-lg backdrop-blur-lg px-7 py-2">
             <form onSubmit={handleSubmit(onSubmit)}>
-              <h1 className="mt-3 text-2xl text-white font-semibold text-center capitalize sm:text-3xl">
+              <h1 className="mt-3 text-2xl  font-semibold text-center capitalize sm:text-3xl">
                 Sign Up
               </h1>
 
@@ -138,7 +139,7 @@ export const Registration = () => {
                 </button>
               </div>
             </form>
-            <p className="mt-4 text-center text-white">or sign up with</p>
+            <p className="mt-4 text-center ">or sign up with</p>
 
             <button className="flex items-center w-full justify-center px-6 py-3 mt-4 text-white transition-colors duration-300 transform border rounded-lg hover:text-black hover:bg-gray-50 dark:hover:bg-gray-600">
               <svg className="w-6 h-6 mx-2" viewBox="0 0 40 40">
@@ -160,7 +161,7 @@ export const Registration = () => {
                 />
               </svg>
 
-              <span className="mx-2">SignUP with Google</span>
+              <span className="mx-2 text-black">SignUP with Google</span>
             </button>
 
             <div className="mt-6 text-center ">
