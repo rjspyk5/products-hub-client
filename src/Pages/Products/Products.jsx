@@ -71,42 +71,45 @@ export const Products = () => {
                 </svg>
               </label>
             </div>
-            <div className="flex order-1 lg:order-2 justify-between items-end">
+            <div className="flex order-1 lg:order-2 justify-between items-center">
               <button className="lg:hidden flex gap-2 items-center">
-                <details className="dropdown">
-                  <summary className="btn m-1">
+                <details className="dropdown p-1">
+                  <summary className="btn m-1 min-h-1 h-9 ">
                     <HiOutlineAdjustmentsHorizontal /> Filter
                   </summary>
-                  <ul className="menu dropdown-content w-96 bg-base-100 rounded-box z-[1] p-2 shadow">
-                    <div className="space-y-4  *:shadow-md *:bg-base-100 *:rounded-sm">
-                      <div>
-                        <details
-                          open={true}
-                          className="collapse collapse-arrow "
-                        >
-                          <summary className="collapse-title font-medium">
-                            Brand
-                          </summary>
-                          <div className="collapse-content">
-                            <p>content</p>
-                          </div>
-                        </details>
-                      </div>
-                      <div>
-                        <details
-                          open={true}
-                          className="collapse collapse-arrow "
-                        >
-                          <summary className="collapse-title font-medium">
-                            Brand
-                          </summary>
-                          <div className="collapse-content">
-                            <div>
-                              <h1>start</h1>
+                  <ul className="menu dropdown-content w-80 sm:w-[400px] md:w-[700px] bg-base-100 rounded-box z-[1] p-2 shadow">
+                    <div className="space-y-4   *:shadow-md *:bg-base-100 *:rounded-sm">
+                      <div className="flex justify-between">
+                        <div className="w-full">
+                          <details
+                            open={true}
+                            className="collapse collapse-arrow "
+                          >
+                            <summary className="collapse-title font-medium">
+                              Brand
+                            </summary>
+                            <div className="collapse-content">
+                              <p>content</p>
                             </div>
-                          </div>
-                        </details>
+                          </details>
+                        </div>
+                        <div className="w-full">
+                          <details
+                            open={true}
+                            className="collapse collapse-arrow "
+                          >
+                            <summary className="collapse-title font-medium">
+                              Brand
+                            </summary>
+                            <div className="collapse-content">
+                              <div>
+                                <h1>start</h1>
+                              </div>
+                            </div>
+                          </details>
+                        </div>
                       </div>
+
                       <div className="p-2">
                         <h1 className="font-semibold p-2">Date Range</h1>{" "}
                         <Datepicker
