@@ -1,3 +1,4 @@
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Datepicker from "react-tailwindcss-datepicker";
@@ -5,16 +6,31 @@ import Datepicker from "react-tailwindcss-datepicker";
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
   const [date, setdate] = useState([[new Date(), new Date()]]);
+  const [sortingvalue, setsortingvalue] = useState("");
+  const [loading, setloading] = useState(false);
 
-  const [isLoading, setisLoading] = useState(false);
   const handleFilter = async () => {
     console.log("test");
   };
+
+  const handleSorting = (e) => {
+    setsortingvalue(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const { data, isLoading, refetch } = useQuery({
+    queryKey: [date],
+    queryFn: async () => {
+      console.log("test");
+    },
+  });
   return (
     <div>
       <h1>Products</h1>
 
       <div className="flex space-x-2">
+        {/* left side when dekstop version */}
+        {/* Dekstop version filtering desgin */}
         <div className="lg:w-[22%] space-y-4 hidden lg:block *:shadow-md *:bg-base-100 *:rounded-sm">
           <div className="flex py-[14px]  justify-between items-center">
             <p>Filter</p>
@@ -48,8 +64,10 @@ export const Products = () => {
             />
           </div>
         </div>
+        {/* Right side when dekstop version */}
         <div className="lg:w-[78%] w-full">
           <div className=" shadow-md p-2 flex flex-col lg:flex-row justify-between lg:items-center gap-2  bg-base-100 rounded-sm">
+            {/* Search box */}
             <div className="flex-grow order-2 lg:order-1">
               <label className="input input-bordered   h-9 focus:outline-none rounded-xl min-h-6 flex items-center gap-2">
                 <input
@@ -71,8 +89,10 @@ export const Products = () => {
                 </svg>
               </label>
             </div>
+            {/* Filter and Sorting div */}
             <div className="flex order-1 lg:order-2 justify-between items-center">
-              <button className="lg:hidden flex gap-2 items-center">
+              {/* Filter div */}
+              <div className="lg:hidden flex gap-2 items-center">
                 <details className="dropdown p-1">
                   <summary className="btn m-1 min-h-1 h-9 ">
                     <HiOutlineAdjustmentsHorizontal /> Filter
@@ -121,19 +141,22 @@ export const Products = () => {
                     </div>
                   </ul>
                 </details>
-              </button>
+              </div>
+              {/* Sorting div */}
               <form>
                 <div className="flex gap-2 items-center">
                   <label htmlFor="select">Sort by:</label>
                   <select
+                    onChange={handleSorting}
+                    value={sortingvalue}
                     id="select"
                     className="select select-bordered    h-9 focus:outline-none rounded-xl min-h-6 "
                   >
-                    <option>Default</option>
-                    <option value="">Newest to oldest</option>
-                    <option value="">Oldest to newest</option>
-                    <option value="">Low to High</option>
-                    <option value="">High to Low</option>
+                    <option value="">Default</option>
+                    <option value="ascendingDate">Newest to oldest</option>
+                    <option value="descendingDate">Oldest to newest</option>
+                    <option value="ascendingPrice">Low to High</option>
+                    <option value="descendingPrice">High to Low</option>
                   </select>
                 </div>
               </form>
