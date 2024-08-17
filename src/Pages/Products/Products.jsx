@@ -14,7 +14,7 @@ export const Products = () => {
   const [catagoriesFilter, setcatagoriesFilter] = useState([]);
   const { productsCount } = useLoaderData();
   const [currentPage, setcurrentPage] = useState(1);
-  const size = 3;
+  const size = 6;
   const totalPage = Math.ceil(productsCount / size);
   const pages = productsCount && [...Array(totalPage).keys()];
   const [searchTerm, setsearchTerm] = useState("");
@@ -75,23 +75,16 @@ export const Products = () => {
   console.log(sortingvalue);
   return (
     <div>
-      <h1>Products</h1>
-
       <div className="flex space-x-2">
         {/* left side when dekstop version */}
         {/* Dekstop version filtering desgin */}
         <div className="lg:w-[22%] space-y-4 hidden lg:block *:shadow-md *:bg-base-100 *:rounded-sm">
-          <div className="flex py-[14px]  justify-between items-center">
-            <p>Filter</p>
-            <p>Clear</p>
-          </div>
-
           <div>
             <details open={true} className="collapse collapse-arrow ">
               <summary className="collapse-title font-medium">
                 Categories
               </summary>
-              <div className="collapse-content">
+              <div className="collapse-content max-h-52 overflow-y-auto">
                 <form action="">
                   {data?.categories.map((el) => {
                     return (
@@ -115,7 +108,7 @@ export const Products = () => {
           <div>
             <details open={true} className="collapse collapse-arrow ">
               <summary className="collapse-title font-medium">Brand</summary>
-              <div className="collapse-content">
+              <div className="collapse-content  max-h-52 overflow-y-auto">
                 <form action="">
                   {data?.brands.map((el) => {
                     return (
@@ -191,10 +184,30 @@ export const Products = () => {
                             className="collapse collapse-arrow "
                           >
                             <summary className="collapse-title font-medium">
-                              Brand
+                              Categories
                             </summary>
-                            <div className="collapse-content">
-                              <p>content</p>
+                            <div className="collapse-content  max-h-48 overflow-y-auto">
+                              <form action="">
+                                {data?.categories.map((el) => {
+                                  return (
+                                    <div key={el} className="form-control py-1">
+                                      <label className="flex items-center gap-1 cursor-pointer">
+                                        <input
+                                          value={el}
+                                          type="checkbox"
+                                          className="checkbox text-sm"
+                                          onChange={(e) =>
+                                            handleFilter(e, "categories")
+                                          }
+                                        />
+                                        <span className="label-text text-xs">
+                                          {el}
+                                        </span>
+                                      </label>
+                                    </div>
+                                  );
+                                })}
+                              </form>
                             </div>
                           </details>
                         </div>
@@ -203,13 +216,31 @@ export const Products = () => {
                             open={true}
                             className="collapse collapse-arrow "
                           >
-                            <summary className="collapse-title font-medium">
+                            <summary className="collapse-title  font-medium">
                               Brand
                             </summary>
-                            <div className="collapse-content">
-                              <div>
-                                <h1>start</h1>
-                              </div>
+                            <div className="collapse-content  max-h-48 overflow-y-auto">
+                              <form action="">
+                                {data?.brands.map((el) => {
+                                  return (
+                                    <div key={el} className="form-control py-1">
+                                      <label className=" cursor-pointer flex items-center gap-1">
+                                        <input
+                                          value={el}
+                                          type="checkbox"
+                                          className="checkbox "
+                                          onChange={(e) =>
+                                            handleFilter(e, "brand")
+                                          }
+                                        />
+                                        <span className="label-text text-xs">
+                                          {el}
+                                        </span>
+                                      </label>
+                                    </div>
+                                  );
+                                })}
+                              </form>
                             </div>
                           </details>
                         </div>
@@ -220,6 +251,7 @@ export const Products = () => {
                         <Datepicker
                           placeholder="YYYY-MM-DD to YYYY-MM-DD."
                           value={date}
+                          onChange={handleDateRange}
                           primaryColor={"indigo"}
                         />
                       </div>

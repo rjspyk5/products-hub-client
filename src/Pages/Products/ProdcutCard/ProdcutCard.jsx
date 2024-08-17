@@ -4,7 +4,7 @@ export const ProdcutCard = ({ product }) => {
   return (
     <div className="card card-compact bg-base-100 shadow-xl">
       <figure>
-        <img src={product?.productImage} alt="Shoes" />
+        <img className="h-72 w-full" src={product?.productImage} alt="Shoes" />
       </figure>
       <div className="card-body">
         <h2 className="card-title">Shoes!</h2>
