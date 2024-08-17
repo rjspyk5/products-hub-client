@@ -1,22 +1,39 @@
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
+import { useLoaderData } from "react-router-dom";
 import Datepicker from "react-tailwindcss-datepicker";
 
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
   const [date, setdate] = useState([[new Date(), new Date()]]);
-  const [sortingvalue, setsortingvalue] = useState("");
   const [loading, setloading] = useState(false);
 
-  const handleFilter = async () => {
-    console.log("test");
+  const [sortingvalue, setsortingvalue] = useState("");
+  const [brandFilter, setbrandFilter] = useState([]);
+  const [catagoriesFilter, setcatagoriesFilter] = useState([]);
+
+  const handleFilter = async (e) => {
+    console.log(e.target.value);
   };
 
+  const handleDateRange = (value) => {
+    console.log(value);
+  };
   const handleSorting = (e) => {
     setsortingvalue(e.target.value);
     console.log(e.target.value);
   };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await fetch("http://localhost:5000/catagoriesandbrand");
+      const [resultt] = await result.json();
+      setbrandFilter(resultt.brands);
+      setcatagoriesFilter(resultt.categories);
+    };
+    fetchData();
+  }, []);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [date],
@@ -41,7 +58,23 @@ export const Products = () => {
             <details open={true} className="collapse collapse-arrow ">
               <summary className="collapse-title font-medium">Brand</summary>
               <div className="collapse-content">
-                <p>content</p>
+                <form action="">
+                  {catagoriesFilter.map((el) => {
+                    return (
+                      <div key={el} className="form-control">
+                        <label className="label cursor-pointer">
+                          <input
+                            value={el}
+                            type="checkbox"
+                            className="checkbox"
+                            onChange={handleFilter}
+                          />
+                          <span className="label-text">{el}</span>
+                        </label>
+                      </div>
+                    );
+                  })}
+                </form>
               </div>
             </details>
           </div>
@@ -49,9 +82,23 @@ export const Products = () => {
             <details open={true} className="collapse collapse-arrow ">
               <summary className="collapse-title font-medium">Brand</summary>
               <div className="collapse-content">
-                <div>
-                  <h1>start</h1>
-                </div>
+                <form action="">
+                  {brandFilter.map((el) => {
+                    return (
+                      <div key={el} className="form-control">
+                        <label className="label cursor-pointer">
+                          <input
+                            value={el}
+                            type="checkbox"
+                            className="checkbox"
+                            onChange={handleFilter}
+                          />
+                          <span className="label-text">{el}</span>
+                        </label>
+                      </div>
+                    );
+                  })}
+                </form>
               </div>
             </details>
           </div>
@@ -60,6 +107,7 @@ export const Products = () => {
             <Datepicker
               placeholder="YYYY-MM-DD to YYYY-MM-DD."
               value={date}
+              onChange={handleDateRange}
               primaryColor={"indigo"}
             />
           </div>
