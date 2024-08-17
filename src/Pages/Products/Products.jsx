@@ -7,16 +7,21 @@ import { useLoaderData } from "react-router-dom";
 
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
-  const [date, setdate] = useState([[new Date(), new Date()]]);
+  const [date, setdate] = useState([]);
   const [loading, setloading] = useState(false);
   const [sortingvalue, setsortingvalue] = useState("");
   const [brandFilter, setbrandFilter] = useState([]);
   const [catagoriesFilter, setcatagoriesFilter] = useState([]);
   const { productsCount } = useLoaderData();
   const [currentPage, setcurrentPage] = useState(1);
-  const size = 1;
+  const size = 3;
   const totalPage = Math.ceil(productsCount / size);
   const pages = productsCount && [...Array(totalPage).keys()];
+  const [searchTerm, setsearchTerm] = useState("");
+
+  const handleSearch = (e) => {
+    setsearchTerm(e.target.value);
+  };
 
   const handleFilter = async (e, type) => {
     const { value, checked } = e.target;
@@ -34,19 +39,30 @@ export const Products = () => {
   };
 
   const handleDateRange = (value) => {
-    console.log(value);
+    setdate([value.startDate, value.endDate]);
   };
 
   useEffect(() => {
     const fetchData = async () => {
       const resultt = await fetch(
-        `http://localhost:5000/products?page=${currentPage}&size=${size}`
+        `http://localhost:5000/products?page=${currentPage}&size=${size}&categories=${catagoriesFilter.join(
+          ","
+        )}&brand=${brandFilter.join(
+          ","
+        )}&dateRange=${date}&sort=${sortingvalue}&searchTerm=${searchTerm}`
       );
       const result = await resultt.json();
       setallProducts(result);
     };
     fetchData();
-  }, [currentPage]);
+  }, [
+    currentPage,
+    catagoriesFilter,
+    brandFilter,
+    date,
+    sortingvalue,
+    searchTerm,
+  ]);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [date],
@@ -141,6 +157,8 @@ export const Products = () => {
                   type="text"
                   className="grow h-9  focus:outline-none rounded-xl min-h-6"
                   placeholder="Search"
+                  value={searchTerm}
+                  onChange={handleSearch}
                 />
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
