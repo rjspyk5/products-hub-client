@@ -14,7 +14,8 @@ export const Products = () => {
   const [catagoriesFilter, setcatagoriesFilter] = useState([]);
   const { productsCount } = useLoaderData();
   const [currentPage, setcurrentPage] = useState(1);
-  const totalPage = Math.ceil(productsCount / 1);
+  const size = 1;
+  const totalPage = Math.ceil(productsCount / size);
   const pages = productsCount && [...Array(totalPage).keys()];
 
   const handleFilter = async (e, type) => {
@@ -38,12 +39,14 @@ export const Products = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const resultt = await fetch("http://localhost:5000/products");
+      const resultt = await fetch(
+        `http://localhost:5000/products?page=${currentPage}&size=${size}`
+      );
       const result = await resultt.json();
       setallProducts(result);
     };
     fetchData();
-  }, []);
+  }, [currentPage]);
 
   const { data, isLoading, refetch } = useQuery({
     queryKey: [date],
