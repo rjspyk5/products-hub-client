@@ -4,6 +4,7 @@ import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Datepicker from "react-tailwindcss-datepicker";
 import { ProdcutCard } from "./ProdcutCard/ProdcutCard";
 import { useLoaderData } from "react-router-dom";
+import { Loading } from "../../Components/LoadingSpinner/Loading";
 
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
@@ -36,14 +37,17 @@ export const Products = () => {
     } else if (type === "sort") {
       setsortingvalue(value);
     }
+    setcurrentPage(1);
   };
 
   const handleDateRange = (value) => {
     setdate([value.startDate, value.endDate]);
+    setcurrentPage(1);
   };
 
   useEffect(() => {
     const fetchData = async () => {
+      setloading(true);
       const resultt = await fetch(
         `http://localhost:5000/products?page=${currentPage}&size=${size}&categories=${catagoriesFilter.join(
           ","
@@ -54,7 +58,8 @@ export const Products = () => {
       const result = await resultt.json();
       setallProducts(result);
     };
-    fetchData();
+
+    fetchData().then(() => setloading(false));
   }, [
     currentPage,
     catagoriesFilter,
@@ -72,7 +77,7 @@ export const Products = () => {
       return resultt;
     },
   });
-  console.log(sortingvalue);
+
   return (
     <div>
       <div className="flex space-x-2">
@@ -280,45 +285,56 @@ export const Products = () => {
             </div>
           </div>
           {/* products div */}
-          <div className="grid lg:grid-cols-3 grid-cols-1 md:grid-cols-2 gap-5 p-3">
-            {allProducts.map((el) => {
-              return <ProdcutCard product={el} key={el._id} />;
-            })}
-          </div>
-          {/* pagination */}
-          <div className="flex justify-center items-center">
-            <div className="join">
-              <button
-                onClick={() =>
-                  currentPage > 1 && setcurrentPage(currentPage - 1)
-                }
-                className="btn join-item"
-              >
-                Previous
-              </button>
-              {pages.map((el) => {
-                return (
-                  <button
-                    key={el}
-                    onClick={() => setcurrentPage(el + 1)}
-                    className={`join-item btn btn-square ${
-                      currentPage === el + 1 && "bg-[#f15a25] text-white"
-                    }`}
-                  >
-                    {el + 1}
-                  </button>
-                );
+          {loading ? (
+            <Loading />
+          ) : allProducts.length > 0 ? (
+            <div className="grid lg:grid-cols-3 grid-cols-1 md:grid-cols-2 gap-5 p-3">
+              {allProducts.map((el) => {
+                return <ProdcutCard product={el} key={el._id} />;
               })}
-              <button
-                onClick={() =>
-                  currentPage < totalPage && setcurrentPage(currentPage + 1)
-                }
-                className="btn join-item"
-              >
-                Next
-              </button>
             </div>
-          </div>
+          ) : (
+            <div className="flex justify-center min-h-96 items-center">
+              <h1 className="text-xl font-semibold">No Products Found</h1>
+            </div>
+          )}
+
+          {/* pagination */}
+          {!loading && allProducts.length > 0 && (
+            <div className="flex justify-center pb-2 items-center">
+              <div className="join">
+                <button
+                  onClick={() =>
+                    currentPage > 1 && setcurrentPage(currentPage - 1)
+                  }
+                  className="btn join-item"
+                >
+                  Previous
+                </button>
+                {pages.map((el) => {
+                  return (
+                    <button
+                      key={el}
+                      onClick={() => setcurrentPage(el + 1)}
+                      className={`join-item btn btn-square ${
+                        currentPage === el + 1 && "bg-[#1a1715] text-white"
+                      }`}
+                    >
+                      {el + 1}
+                    </button>
+                  );
+                })}
+                <button
+                  onClick={() =>
+                    currentPage < totalPage && setcurrentPage(currentPage + 1)
+                  }
+                  className="btn join-item"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
