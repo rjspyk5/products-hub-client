@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
 import Datepicker from "react-tailwindcss-datepicker";
 import { ProdcutCard } from "./ProdcutCard/ProdcutCard";
+import { useLoaderData } from "react-router-dom";
 
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
@@ -11,6 +12,10 @@ export const Products = () => {
   const [sortingvalue, setsortingvalue] = useState("");
   const [brandFilter, setbrandFilter] = useState([]);
   const [catagoriesFilter, setcatagoriesFilter] = useState([]);
+  const { productsCount } = useLoaderData();
+  const [currentPage, setcurrentPage] = useState(1);
+  const totalPage = Math.ceil(productsCount / 1);
+  const pages = productsCount && [...Array(totalPage).keys()];
 
   const handleFilter = async (e, type) => {
     const { value, checked } = e.target;
@@ -226,6 +231,40 @@ export const Products = () => {
             {allProducts.map((el) => {
               return <ProdcutCard product={el} key={el._id} />;
             })}
+          </div>
+          {/* pagination */}
+          <div className="flex justify-center items-center">
+            <div className="join">
+              <button
+                onClick={() =>
+                  currentPage > 1 && setcurrentPage(currentPage - 1)
+                }
+                className="btn join-item"
+              >
+                Previous
+              </button>
+              {pages.map((el) => {
+                return (
+                  <button
+                    key={el}
+                    onClick={() => setcurrentPage(el + 1)}
+                    className={`join-item btn btn-square ${
+                      currentPage === el + 1 && "bg-[#f15a25] text-white"
+                    }`}
+                  >
+                    {el + 1}
+                  </button>
+                );
+              })}
+              <button
+                onClick={() =>
+                  currentPage < totalPage && setcurrentPage(currentPage + 1)
+                }
+                className="btn join-item"
+              >
+                Next
+              </button>
+            </div>
           </div>
         </div>
       </div>

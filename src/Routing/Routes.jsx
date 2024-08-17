@@ -10,6 +10,7 @@ export const Routes = createBrowserRouter([
       {
         path: "/",
         element: <Products />,
+        loader: async () => fetch("http://localhost:5000/productsCount"),
       },
     ],
   },
