@@ -1,36 +1,41 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { HiOutlineAdjustmentsHorizontal } from "react-icons/hi2";
-import { useLoaderData } from "react-router-dom";
 import Datepicker from "react-tailwindcss-datepicker";
+import { ProdcutCard } from "./ProdcutCard/ProdcutCard";
 
 export const Products = () => {
   const [allProducts, setallProducts] = useState([]);
   const [date, setdate] = useState([[new Date(), new Date()]]);
   const [loading, setloading] = useState(false);
-
   const [sortingvalue, setsortingvalue] = useState("");
   const [brandFilter, setbrandFilter] = useState([]);
   const [catagoriesFilter, setcatagoriesFilter] = useState([]);
 
-  const handleFilter = async (e) => {
-    console.log(e.target.value);
+  const handleFilter = async (e, type) => {
+    const { value, checked } = e.target;
+    if (type === "brand") {
+      setbrandFilter((pre) =>
+        checked ? [...pre, value] : pre.filter((el) => el !== value)
+      );
+    } else if (type == "categories") {
+      setcatagoriesFilter((pre) =>
+        checked ? [...pre, value] : pre.filter((el) => el !== value)
+      );
+    } else if (type === "sort") {
+      setsortingvalue(value);
+    }
   };
 
   const handleDateRange = (value) => {
     console.log(value);
   };
-  const handleSorting = (e) => {
-    setsortingvalue(e.target.value);
-    console.log(e.target.value);
-  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await fetch("http://localhost:5000/catagoriesandbrand");
-      const [resultt] = await result.json();
-      setbrandFilter(resultt.brands);
-      setcatagoriesFilter(resultt.categories);
+      const resultt = await fetch("http://localhost:5000/products");
+      const result = await resultt.json();
+      setallProducts(result);
     };
     fetchData();
   }, []);
@@ -38,9 +43,12 @@ export const Products = () => {
   const { data, isLoading, refetch } = useQuery({
     queryKey: [date],
     queryFn: async () => {
-      console.log("test");
+      const result = await fetch("http://localhost:5000/catagoriesandbrand");
+      const [resultt] = await result.json();
+      return resultt;
     },
   });
+  console.log(sortingvalue);
   return (
     <div>
       <h1>Products</h1>
@@ -56,10 +64,12 @@ export const Products = () => {
 
           <div>
             <details open={true} className="collapse collapse-arrow ">
-              <summary className="collapse-title font-medium">Brand</summary>
+              <summary className="collapse-title font-medium">
+                Categories
+              </summary>
               <div className="collapse-content">
                 <form action="">
-                  {catagoriesFilter.map((el) => {
+                  {data?.categories.map((el) => {
                     return (
                       <div key={el} className="form-control">
                         <label className="label cursor-pointer">
@@ -67,7 +77,7 @@ export const Products = () => {
                             value={el}
                             type="checkbox"
                             className="checkbox"
-                            onChange={handleFilter}
+                            onChange={(e) => handleFilter(e, "categories")}
                           />
                           <span className="label-text">{el}</span>
                         </label>
@@ -83,7 +93,7 @@ export const Products = () => {
               <summary className="collapse-title font-medium">Brand</summary>
               <div className="collapse-content">
                 <form action="">
-                  {brandFilter.map((el) => {
+                  {data?.brands.map((el) => {
                     return (
                       <div key={el} className="form-control">
                         <label className="label cursor-pointer">
@@ -91,7 +101,7 @@ export const Products = () => {
                             value={el}
                             type="checkbox"
                             className="checkbox"
-                            onChange={handleFilter}
+                            onChange={(e) => handleFilter(e, "brand")}
                           />
                           <span className="label-text">{el}</span>
                         </label>
@@ -114,6 +124,7 @@ export const Products = () => {
         </div>
         {/* Right side when dekstop version */}
         <div className="lg:w-[78%] w-full">
+          {/* first div */}
           <div className=" shadow-md p-2 flex flex-col lg:flex-row justify-between lg:items-center gap-2  bg-base-100 rounded-sm">
             {/* Search box */}
             <div className="flex-grow order-2 lg:order-1">
@@ -195,7 +206,7 @@ export const Products = () => {
                 <div className="flex gap-2 items-center">
                   <label htmlFor="select">Sort by:</label>
                   <select
-                    onChange={handleSorting}
+                    onChange={(e) => handleFilter(e, "sort")}
                     value={sortingvalue}
                     id="select"
                     className="select select-bordered    h-9 focus:outline-none rounded-xl min-h-6 "
@@ -209,6 +220,12 @@ export const Products = () => {
                 </div>
               </form>
             </div>
+          </div>
+          {/* products div */}
+          <div className="grid lg:grid-cols-3 grid-cols-1 md:grid-cols-2 gap-5 p-3">
+            {allProducts.map((el) => {
+              return <ProdcutCard product={el} key={el._id} />;
+            })}
           </div>
         </div>
       </div>
