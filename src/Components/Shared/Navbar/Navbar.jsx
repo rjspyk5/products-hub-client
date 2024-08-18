@@ -1,11 +1,11 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { AuthContext } from "../../../Provider/AuthProvider";
-import { RiH1 } from "react-icons/ri";
+
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
   const { user, logOut } = useContext(AuthContext);
-  console.log(user);
+
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">

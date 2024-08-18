@@ -81,7 +81,7 @@ export const Products = () => {
   });
 
   return (
-    <div>
+    <div className=" py-10">
       <div className="flex space-x-2">
         {/* left side when dekstop version */}
         {/* Dekstop version filtering desgin */}
