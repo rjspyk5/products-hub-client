@@ -1,7 +1,8 @@
-import React, { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../Provider/AuthProvider";
+import Swal from "sweetalert2";
 
 export const Login = () => {
   const { user, signIn } = useContext(AuthContext);
@@ -11,10 +12,26 @@ export const Login = () => {
     handleSubmit,
     formState: { errors },
   } = useForm();
+  useEffect(() => {
+    user && navigate("/");
+  }, []);
+
   const onSubmit = (data) => {
     signIn(data.email, data.pass)
-      .then((res) => navigate("/"))
-      .catch((er) => console.log(er));
+      .then(() => {
+        navigate("/");
+        Swal.fire({
+          icon: "success",
+          title: "Successfully login",
+          timer: 2000,
+        });
+      })
+      .catch((er) => {
+        Swal.fire({
+          icon: "error",
+          title: `${er}`,
+        });
+      });
   };
   return (
     <div>

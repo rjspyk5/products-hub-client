@@ -1,10 +1,12 @@
 import { useContext } from "react";
 import { AuthContext } from "../../Provider/AuthProvider";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import Swal from "sweetalert2";
 
 export const Registration = () => {
-  const { user, goggleLogin, signUp } = useContext(AuthContext);
+  const { user, goggleLogin, signUp, logOut } = useContext(AuthContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -12,27 +14,22 @@ export const Registration = () => {
   } = useForm();
   const onSubmit = (data) => {
     signUp(data.email, data.pass)
-      .then((res) => console.log(res))
-      .catch((er) => console.log(er));
-
-    //   createUser(data.email, data.pass)
-
-    //   .then(() => logOut())
-    //   .then(() => {
-    //     return Swal.fire({
-    //       icon: "success",
-    //       title: "Registration successful,now you can login",
-    //       timer: 2000,
-    //     });
-    //   })
-    //   .then(() => navigate("/login"))
-    //   .catch((er) => {
-    //     Swal.fire({
-    //       icon: "error",
-    //       title: "Registration failed",
-    //       text: er.message,
-    //     });
-    //   });
+      .then(() => logOut())
+      .then(() => {
+        return Swal.fire({
+          icon: "success",
+          title: "Registration successful,now you can login",
+          timer: 2000,
+        });
+      })
+      .then(() => navigate("/login"))
+      .catch((er) => {
+        Swal.fire({
+          icon: "error",
+          title: "Registration failed",
+          text: er.message,
+        });
+      });
   };
   return (
     <div>

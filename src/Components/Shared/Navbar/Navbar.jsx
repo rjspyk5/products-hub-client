@@ -4,7 +4,8 @@ import { RiH1 } from "react-icons/ri";
 import { Link } from "react-router-dom";
 
 export const Navbar = () => {
-  const { user } = useContext(AuthContext);
+  const { user, logOut } = useContext(AuthContext);
+
   return (
     <div className="navbar bg-base-300">
       <div className="flex-1">
@@ -41,14 +42,19 @@ export const Navbar = () => {
                 <a>Settings</a>
               </li>
               <li>
-                <a>Logout</a>
+                <a onClick={() => logOut()}>Logout</a>
               </li>
             </ul>
           </div>
         ) : (
-          <Link className="btn btn-info text-white" to="/login">
-            Login
-          </Link>
+          <div className="flex gap-2">
+            <Link className="btn btn-info text-white" to="/login">
+              Login
+            </Link>{" "}
+            <Link className="btn btn-info text-white" to="/reg">
+              Registration
+            </Link>
+          </div>
         )}
       </div>
     </div>
